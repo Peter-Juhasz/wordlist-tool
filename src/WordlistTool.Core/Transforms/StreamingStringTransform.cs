@@ -8,7 +8,7 @@ public abstract class StreamingStringTransform : ITransform<InputOptions, Output
 
 	public async Task ExecuteAsync(InputOptions input, OutputOptions output, CancellationToken cancellationToken)
 	{
-		await using var writer = WordlistWriter.GetWriterAsync(output);
+		await using var writer = WordlistWriter.GetWriter(output);
 		await foreach (var line in WordlistReader.ReadStreamingAsync(input, cancellationToken))
 		{
 			var transformed = Transform(line, cancellationToken);

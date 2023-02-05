@@ -36,7 +36,7 @@ public abstract class AsciiStreamingSpanTransform : ITransform<InputOptions, Out
 			reader.AdvanceTo(buffer.Start, buffer.End);
 
 			// flush
-			if (writer.UnflushedBytes > output.BufferSize)
+			if (writer.UnflushedBytes >= output.BufferSize)
 			{
 				await writer.FlushAsync(cancellationToken);
 			}

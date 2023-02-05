@@ -14,7 +14,7 @@ public sealed class RegexExtractTransform : ITransform<IReadOnlyList<InputOption
 
 	public async Task ExecuteAsync(IReadOnlyList<InputOptions> inputs, OutputOptions output, CancellationToken cancellationToken)
 	{
-		await using var writer = WordlistWriter.GetWriterAsync(output);
+		await using var writer = WordlistWriter.GetWriter(output);
 		foreach (var input in inputs)
 		{
 			using var reader = input.GetTextReader();

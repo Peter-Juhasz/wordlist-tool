@@ -24,7 +24,7 @@ public sealed class CrossTransform : ITransform<IReadOnlyList<InputOptions>, Out
 		var first = WordlistReader.ReadStreamingAsync(inputs[0], cancellationToken);
 		var second = await WordlistReader.ReadToMemoryAsync(inputs.Count < 2 ? inputs[0] : inputs[1], cancellationToken);
 
-		var writer = WordlistWriter.GetWriterAsync(output);
+		var writer = WordlistWriter.GetWriter(output);
 
 		await foreach (var line in first)
 		{

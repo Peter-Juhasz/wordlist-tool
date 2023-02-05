@@ -1,8 +1,8 @@
 ﻿namespace WordlistTool.Core.Serialization;
 
-public class StringLineWriter : IAsyncDisposable
+public sealed class TextLineWriter : IAsyncDisposable
 {
-	public StringLineWriter(TextWriter writer)
+	public TextLineWriter(TextWriter writer)
 	{
 		Writer = writer;
 	}
@@ -12,6 +12,7 @@ public class StringLineWriter : IAsyncDisposable
 
 	public async ValueTask WriteAsync(string line, CancellationToken cancellationToken)
 	{
+		cancellationToken.ThrowIfCancellationRequested();
 		await Writer.WriteLineAsync(line);
 	}
 

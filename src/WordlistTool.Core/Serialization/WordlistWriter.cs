@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO.Pipelines;
+using System.Text;
 using WordlistTool.Core.Transforms;
 
 namespace WordlistTool.Core.Serialization;
@@ -17,8 +18,17 @@ public static class WordlistWriter
 
 	public static async Task WriteAsync(Stream stream, int bufferSize, Encoding encoding, byte[] lineEnding, IEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		using var writer = new StreamWriter(stream, encoding, bufferSize) { NewLine = encoding.GetString(lineEnding) };
-		await WriteAsync(writer, list, cancellationToken);
+		var writer = PipeWriter.Create(stream, new(null, bufferSize, false));
+		await WriteAsync(writer, bufferSize, encoding, lineEnding, list, cancellationToken);
+	}
+
+	public static async Task WriteAsync(PipeWriter pipe, int bufferSize, Encoding encoding, byte[] lineEnding, IEnumerable<string> list, CancellationToken cancellationToken)
+	{
+		await using var writer = GetWriter(pipe, bufferSize, encoding, lineEnding);
+		foreach (var line in list)
+		{
+			await writer.WriteAsync(line, cancellationToken);
+		}
 	}
 
 	public static async Task WriteAsync(string filePath, int bufferSize, Encoding encoding, byte[] lineEnding, IEnumerable<string> list, CancellationToken cancellationToken)
@@ -45,8 +55,17 @@ public static class WordlistWriter
 
 	public static async Task WriteAsync(Stream stream, int bufferSize, Encoding encoding, byte[] lineEnding, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		using var writer = new StreamWriter(stream, encoding, bufferSize) { NewLine = encoding.GetString(lineEnding) };
-		await WriteAsync(writer, list, cancellationToken);
+		var writer = PipeWriter.Create(stream, new(null, bufferSize, false));
+		await WriteAsync(writer, bufferSize, encoding, lineEnding, list, cancellationToken);
+	}
+
+	public static async Task WriteAsync(PipeWriter pipe, int bufferSize, Encoding encoding, byte[] lineEnding, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
+	{
+		await using var writer = GetWriter(pipe, bufferSize, encoding, lineEnding);
+		await foreach (var line in list)
+		{
+			await writer.WriteAsync(line, cancellationToken);
+		}
 	}
 
 	public static async Task WriteAsync(string filePath, int bufferSize, Encoding encoding, byte[] lineEnding, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
@@ -61,22 +80,27 @@ public static class WordlistWriter
 	}
 
 
-	public static StringLineWriter GetWriterAsync(TextWriter writer) => new(writer);
+	public static TextLineWriter GetWriter(TextWriter writer) => new(writer);
 
-	public static StringLineWriter GetWriterAsync(Stream stream, int bufferSize, Encoding encoding, byte[] lineEnding)
+	public static PipeLineWriter GetWriter(Stream stream, int bufferSize, Encoding encoding, byte[] lineEnding)
 	{
-		var streamWriter = new StreamWriter(stream, encoding, bufferSize) { NewLine = encoding.GetString(lineEnding) };
-		return new(streamWriter);
+		var pipe = PipeWriter.Create(stream, new(null, bufferSize, false));
+		return GetWriter(pipe, bufferSize, encoding, lineEnding);
 	}
 
-	public static StringLineWriter GetWriterAsync(OutputOptions output)
+	public static PipeLineWriter GetWriter(PipeWriter pipe, int bufferSize, Encoding encoding, byte[] lineEnding)
 	{
-		return GetWriterAsync(output.Stream, output.BufferSize, output.Encoding, output.LineEndingBytes);
+		return new(pipe, encoding, lineEnding, bufferSize); // TODO: revisit disposal of streams
 	}
 
-	public static async Task<StringLineWriter> GetWriterAsync(string filePath, int bufferSize, Encoding encoding, byte[] lineEnding, CancellationToken cancellationToken)
+	public static PipeLineWriter GetWriter(OutputOptions output)
 	{
-		var stream = File.Create(filePath);
-		return GetWriterAsync(stream, bufferSize, encoding, lineEnding);
+		return GetWriter(output.GetPipeWriter(), output.BufferSize, output.Encoding, output.LineEndingBytes);
+	}
+
+	public static async Task<PipeLineWriter> GetWriterAsync(string filePath, int bufferSize, Encoding encoding, byte[] lineEnding, CancellationToken cancellationToken)
+	{
+		var stream = File.Create(filePath); // TODO: should be async?
+		return GetWriter(stream, bufferSize, encoding, lineEnding);
 	}
 }

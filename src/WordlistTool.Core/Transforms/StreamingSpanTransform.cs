@@ -33,7 +33,7 @@ public abstract class StreamingSpanTransform : ITransform<InputOptions, OutputOp
 			}
 
 			// flush
-			if (writer.UnflushedBytes > output.BufferSize)
+			if (writer.UnflushedBytes >= output.BufferSize)
 			{
 				await writer.FlushAsync(cancellationToken);
 			}
