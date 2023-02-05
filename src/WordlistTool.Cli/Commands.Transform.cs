@@ -105,6 +105,20 @@ public static partial class Commands
 			});
 			main.AddCommand(filter);
 		}
+
+		{
+			var filter = new Command("identity", "No transformation applied to entries.");
+			filter.AddArgument(inputPathArgument);
+			filter.AddArgument(outputPathArgument);
+			filter.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var transform = new IdentityTransform();
+				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
+			});
+			main.AddCommand(filter);
+		}
 	}
 
 }

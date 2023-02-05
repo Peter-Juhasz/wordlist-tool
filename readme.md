@@ -116,6 +116,16 @@ Reverse entries:
 wl transform reverse list.txt output.txt
 ```
 
+No not change entries. This transform is useful to either display:
+```ps
+wl transform identity list.txt OUT
+```
+
+Or change encoding or line endings of a list:
+```ps
+wl transform identity in.txt out.txt --input-encoding UTF8 --output-encoding ASCII
+```
+
 
 ### Merge
 Concatenate multiple lists together:
@@ -245,10 +255,20 @@ Encoding can be specified, default is `ASCII`:
 wl transform lower in.txt out.txt --input-encoding UTF-8 --output-encoding ASCII
 ```
 
+You can use the `identity` transform to change encoding of a list:
+```ps
+wl transform identity in.txt out.txt --input-encoding UTF8 --output-encoding ASCII
+```
+
 ### Line endings
 Line endings can be specified in HEX notation, default is `0A`:
 ```ps
 wl transform lower in.txt out.txt --input-line-ending 0D0A --output-line-ending 0A
+```
+
+You can use the `identity` transform to change line endings of a list:
+```ps
+wl transform identity in.txt out.txt --input-line-ending 0D0A --output-line-ending 0A
 ```
 
 ### Buffering
