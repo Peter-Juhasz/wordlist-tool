@@ -20,7 +20,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new TakeTransform(context.BindingContext.ParseResult.GetValueForOption(countOption));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -37,7 +37,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new TakeLastTransform(context.BindingContext.ParseResult.GetValueForOption(countOption));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -54,7 +54,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new SkipTransform(context.BindingContext.ParseResult.GetValueForOption(countOption));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -71,7 +71,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new SkipLastTransform(context.BindingContext.ParseResult.GetValueForOption(countOption));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});

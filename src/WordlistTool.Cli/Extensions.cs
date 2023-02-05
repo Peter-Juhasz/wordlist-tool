@@ -9,13 +9,19 @@ public static partial class Extensions
 	public static InputOptions GetInputOptions(
 		this InvocationContext context,
 		Argument<string> inputArg,
-		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
 		var inputPath = context.BindingContext.ParseResult.GetValueForArgument(inputArg);
 		var input = ResolveInputStream(inputPath);
 
-		return new(inputPath, input, context.GetEncoding(encodingOption, fallbackEncodingOption));
+		return new(
+			inputPath, 
+			input, 
+			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
+		);
 	}
 
 	private static Stream ResolveInputStream(string inputPath) => inputPath switch
@@ -27,7 +33,8 @@ public static partial class Extensions
 	public static IReadOnlyList<InputOptions> GetInputOptions(
 		this InvocationContext context,
 		Option<string[]> inputArg,
-		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
 		var arguments = context.BindingContext.ParseResult.GetValueForOption(inputArg)!;
@@ -47,32 +54,49 @@ public static partial class Extensions
 		}
 
 		return paths
-			.Select(i => new InputOptions(i, ResolveInputStream(i), context.GetEncoding(encodingOption, fallbackEncodingOption)))
+			.Select(i => new InputOptions(
+				i,
+				ResolveInputStream(i),
+				context.GetEncoding(encodingOption, fallbackEncodingOption), 
+				context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
+			))
 			.ToList();
 	}
 
 	public static OutputOptions GetOutputOptions(
 		this InvocationContext context,
 		Argument<string> outputArg,
-		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
 		var outputPath = context.BindingContext.ParseResult.GetValueForArgument(outputArg);
 		var output = ResolveOutputStream(outputPath);
 
-		return new(outputPath, output, context.GetEncoding(encodingOption, fallbackEncodingOption));
+		return new(
+			outputPath,
+			output, 
+			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
+		);
 	}
 
 	public static OutputOptions GetOutputOptions(
 		this InvocationContext context,
 		Option<string> outputArg,
-		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
 		var outputPath = context.BindingContext.ParseResult.GetValueForOption(outputArg);
 		var output = ResolveOutputStream(outputPath);
 
-		return new(outputPath, output, context.GetEncoding(encodingOption, fallbackEncodingOption));
+		return new(
+			outputPath, 
+			output, 
+			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
+		);
 	}
 
 	private static Stream ResolveOutputStream(string outputPath)
@@ -99,17 +123,20 @@ public static partial class Extensions
 
 	public static (InputOptions input, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Argument<string> inputArg, Argument<string> outputArg,
-		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding) => (
-		context.GetInputOptions(inputArg, inputEncoding, encodingOption),
-		context.GetOutputOptions(outputArg, outputEncoding, encodingOption)
+		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding,
+		Option<int?> bufferSizeOption, Option<int?> inputBufferSizeOption, Option<int?> outputBufferSizeOption
+	) => (
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputBufferSizeOption, bufferSizeOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static (IReadOnlyList<InputOptions> inputs, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Option<string[]> inputArg, Option<string> outputArg,
-		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding
+		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding,
+		Option<int?> bufferSizeOption, Option<int?> inputBufferSizeOption, Option<int?> outputBufferSizeOption
 	) => (
-		context.GetInputOptions(inputArg, inputEncoding, encodingOption),
-		context.GetOutputOptions(outputArg, outputEncoding, encodingOption)
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputBufferSizeOption, bufferSizeOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static ITransform<InputOptions, OutputOptions> CreateTransform(

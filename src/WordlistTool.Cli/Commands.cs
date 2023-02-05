@@ -15,8 +15,19 @@ public static partial class Commands
 	private static readonly Option<string?> inputLineEndingOption = new Option<string?>("--input-line-ending", "Line ending sequence of input.");
 	private static readonly Option<string?> outputLineEndingOption = new Option<string?>("--output-line-ending", "Line ending sequence of output.");
 
+	private static readonly Option<int?> bufferSizeOption = new Option<int?>("--buffer-size", "Default buffer size for reading and writing.");
+	private static readonly Option<int?> inputBufferSizeOption = new Option<int?>("--input-buffer-size", "Buffer size for reading input.");
+	private static readonly Option<int?> outputBufferSizeOption = new Option<int?>("--output-buffer-size", "Buffer size for writing output.");
+
 	public static void AddCommands(this RootCommand root)
 	{
+		AddSort(root);
+		AddFilters(root);
+		AddTransform(root);
+		AddList(root);
+		AddExtract(root);
+		AddMerge(root);
+
 		encodingOption.SetDefaultValue("ASCII");
 		root.AddGlobalOption(encodingOption);
 		root.AddGlobalOption(inputEncodingOption);
@@ -27,11 +38,9 @@ public static partial class Commands
 		root.AddGlobalOption(inputLineEndingOption);
 		root.AddGlobalOption(outputLineEndingOption);
 
-		AddSort(root);
-		AddFilters(root);
-		AddTransform(root);
-		AddList(root);
-		AddExtract(root);
-		AddMerge(root);
+		bufferSizeOption.SetDefaultValue(16384);
+		root.AddGlobalOption(bufferSizeOption);
+		root.AddGlobalOption(inputBufferSizeOption);
+		root.AddGlobalOption(outputBufferSizeOption);
 	}
 }
