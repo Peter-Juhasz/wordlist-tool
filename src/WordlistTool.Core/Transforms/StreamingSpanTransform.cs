@@ -27,7 +27,7 @@ public abstract class StreamingSpanTransform : ITransform<InputOptions, OutputOp
 			// try find individual lines
 			ReadOnlySequence<byte> buffer = result.Buffer;
 
-			while (TryReadLine(ref buffer, out ReadOnlySequence<byte> line))
+			while (TryReadLine(ref buffer, input.LineEndingBytes, out ReadOnlySequence<byte> line))
 			{
 				ProcessLine(output, line, writer);
 			}
@@ -51,22 +51,18 @@ public abstract class StreamingSpanTransform : ITransform<InputOptions, OutputOp
 		}
 	}
 
-	private static bool TryReadLine(ref ReadOnlySequence<byte> buffer, out ReadOnlySequence<byte> line)
+	private static bool TryReadLine(ref ReadOnlySequence<byte> buffer, byte[] lineEnding, out ReadOnlySequence<byte> line)
 	{
 		// try to find next line separator
-		SequencePosition? position = buffer.PositionOf((byte)'\n');
-
-		// not found
-		if (position == null)
+		var reader = new SequenceReader<byte>(buffer);
+		if (reader.TryReadTo(out line, lineEnding, advancePastDelimiter: false))
 		{
-			line = default;
-			return false;
+			buffer = buffer.Slice(line.Length + lineEnding.Length);
+			return true;
 		}
 
-		// create a window in the byte sequence
-		line = buffer.Slice(0, position.Value);
-		buffer = buffer.Slice(buffer.GetPosition(1, position.Value));
-		return true;
+		line = default;
+		return false;
 	}
 
 	private bool ProcessLine(OutputOptions outputOptions, ReadOnlySequence<byte> bytes, PipeWriter writer)

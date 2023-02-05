@@ -19,7 +19,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = options.CreateTransform(() => new ToUpperTransform(), ascii: () => new ToUpperTransform());
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -35,7 +35,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = options.CreateTransform(() => new ToLowerTransform(), ascii: () => new ToLowerTransform());
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -52,7 +52,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var value = context.BindingContext.ParseResult.GetValueForArgument(valueOption).ToCharArray();
 				var transform = options.CreateTransform(() => new PrependTransform(value), ascii: () => new AsciiPrependTransform(value));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
@@ -70,7 +70,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var value = context.BindingContext.ParseResult.GetValueForArgument(valueOption).ToCharArray();
 				var transform = options.CreateTransform(() => new AppendTransform(value), ascii: () => new AsciiAppendTransform(value));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
@@ -85,7 +85,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = options.CreateTransform(() => new ReverseTransform(), ascii: () => new AsciiReverseTransform());
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -99,7 +99,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = options.CreateTransform(() => new TrimTransform(), ascii: () => new TrimTransform());
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});

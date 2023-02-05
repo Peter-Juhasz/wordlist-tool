@@ -239,19 +239,19 @@ wl filter distinct IN OUT |
 wl sort asc IN final.txt
 ```
 
-### Encoding (WIP)
+### Encoding
 Encoding can be specified, default is `ASCII`:
 ```ps
 wl transform lower in.txt out.txt --input-encoding UTF-8 --output-encoding ASCII
 ```
 
-### Line endings (WIP)
+### Line endings
 Line endings can be specified in HEX notation, default is `0A`:
 ```ps
 wl transform lower in.txt out.txt --input-line-ending 0D0A --output-line-ending 0A
 ```
 
-### Buffering (WIP)
+### Buffering
 Read and write buffering can be specified the following way:
 ```ps
 wl transform lower in.txt out.txt --input-buffer-size 4096 --output-buffer-size 16384

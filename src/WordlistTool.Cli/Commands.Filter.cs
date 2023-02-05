@@ -18,7 +18,7 @@ public static partial class Commands
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new DistinctTransform();
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -33,7 +33,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = options.CreateTransform(() => new FilterWhitespaceTransform(), ascii: () => new AsciiFilterWhitespaceTransform());
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -51,7 +51,7 @@ public static partial class Commands
 			{
 				var regex = new Regex(context.BindingContext.ParseResult.GetValueForArgument(regexArgument), RegexOptions.Compiled);
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new FilterRegexTransform(regex);
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -68,7 +68,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var length = context.BindingContext.ParseResult.GetValueForOption(lengthOption);
 				var transform = options.CreateTransform(() => new FilterMinimumLengthTransform(length), ascii: () => new AsciiFilterMinimumLengthTransform(length));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
@@ -86,7 +86,7 @@ public static partial class Commands
 			filter.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var length = context.BindingContext.ParseResult.GetValueForOption(lengthOption);
 				var transform = options.CreateTransform(() => new FilterMaximumLengthTransform(length), ascii: () => new AsciiFilterMaximumLengthTransform(length));
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);

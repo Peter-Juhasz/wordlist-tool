@@ -9,12 +9,14 @@ public class InputOptions
 		string? FilePath,
 		Stream Stream,
 		Encoding Encoding,
+		byte[] LineEnding,
 		int BufferSize = 16_384
 	)
 	{
 		this.FilePath = FilePath;
 		this.Stream = Stream;
 		this.Encoding = Encoding;
+		this.LineEndingBytes = LineEnding;
 		this.BufferSize = BufferSize;
 	}
 
@@ -29,9 +31,9 @@ public class InputOptions
 	public string GetLineEndingString() => new string(GetLineEndingChars());
 
 
-	public StreamReader GetStreamReader() => new(Stream, Encoding);
+	public StreamReader GetStreamReader() => new(Stream, Encoding, detectEncodingFromByteOrderMarks: false, BufferSize);
 
-	public PipeReader GetPipeReader() => PipeReader.Create(Stream);
+	public PipeReader GetPipeReader() => PipeReader.Create(Stream, new(null, BufferSize, BufferSize, false));
 
-	public TextReader GetTextReader() => new StreamReader(Stream, Encoding);
+	public TextReader GetTextReader() => new StreamReader(Stream, Encoding, detectEncodingFromByteOrderMarks: false, BufferSize);
 }

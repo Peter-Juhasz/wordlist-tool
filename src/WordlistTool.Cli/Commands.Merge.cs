@@ -21,7 +21,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new ConcatTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -35,7 +35,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new UnionTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -54,7 +54,7 @@ public static partial class Commands
 			{
 				var cancellationToken = context.GetCancellationToken();
 				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new ZipTransform(separator);
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -64,7 +64,7 @@ public static partial class Commands
 		{
 			var separatorArg = new Option<string?>("separator", "Separator to join entries.");
 
-			var command = new Command("cross", "Cartesian product of two lists.");
+			var command = new Command("cross", "Combine each line with each other line.");
 			command.AddAlias("cross-join");
 			command.AddAlias("descartes");
 			command.AddOption(multipleInputArgument);
@@ -74,7 +74,7 @@ public static partial class Commands
 			{
 				var cancellationToken = context.GetCancellationToken();
 				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new CrossTransform(separator);
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -88,7 +88,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new ExceptTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});

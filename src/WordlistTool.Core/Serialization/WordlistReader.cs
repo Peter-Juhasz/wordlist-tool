@@ -16,7 +16,7 @@ public static class WordlistReader
 
 	public static async IAsyncEnumerable<string> ReadStreamingAsync(Stream stream, Encoding encoding, [EnumeratorCancellation] CancellationToken cancellationToken)
 	{
-		using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: false);
+		using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: false); // TODO: new line not supported
 		await foreach (var line in ReadStreamingAsync(reader, cancellationToken)) // TODO: rewrite to pipelines, because textreader is slow
 		{
 			yield return line;

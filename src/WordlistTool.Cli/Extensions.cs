@@ -10,6 +10,7 @@ public static partial class Extensions
 		this InvocationContext context,
 		Argument<string> inputArg,
 		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<string?> lineEndingOption, Option<string?> fallbackLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
@@ -20,6 +21,7 @@ public static partial class Extensions
 			inputPath, 
 			input, 
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
 		);
 	}
@@ -34,6 +36,7 @@ public static partial class Extensions
 		this InvocationContext context,
 		Option<string[]> inputArg,
 		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<string?> lineEndingOption, Option<string?> fallbackLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
@@ -57,7 +60,8 @@ public static partial class Extensions
 			.Select(i => new InputOptions(
 				i,
 				ResolveInputStream(i),
-				context.GetEncoding(encodingOption, fallbackEncodingOption), 
+				context.GetEncoding(encodingOption, fallbackEncodingOption),
+				context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 				context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
 			))
 			.ToList();
@@ -67,6 +71,7 @@ public static partial class Extensions
 		this InvocationContext context,
 		Argument<string> outputArg,
 		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<string?> lineEndingOption, Option<string?> fallbackLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
@@ -77,6 +82,7 @@ public static partial class Extensions
 			outputPath,
 			output, 
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
 		);
 	}
@@ -85,6 +91,7 @@ public static partial class Extensions
 		this InvocationContext context,
 		Option<string> outputArg,
 		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<string?> lineEndingOption, Option<string?> fallbackLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
 	)
 	{
@@ -95,6 +102,7 @@ public static partial class Extensions
 			outputPath, 
 			output, 
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
 		);
 	}
@@ -121,22 +129,33 @@ public static partial class Extensions
 		_ => Encoding.ASCII
 	};
 
+	public static byte[] GetLineEnding(
+		this InvocationContext context,
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+	) => Convert.FromHexString(
+		context.BindingContext.ParseResult.GetValueForOption(encodingOption) ??
+		context.BindingContext.ParseResult.GetValueForOption(fallbackEncodingOption) ??
+		"0A"
+	);
+
 	public static (InputOptions input, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Argument<string> inputArg, Argument<string> outputArg,
 		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding,
+		Option<string?> lineEndingOption, Option<string?> inputLineEndingOption, Option<string?> outputLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> inputBufferSizeOption, Option<int?> outputBufferSizeOption
 	) => (
-		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputBufferSizeOption, bufferSizeOption),
-		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputBufferSizeOption, bufferSizeOption)
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputLineEndingOption, lineEndingOption, inputBufferSizeOption, bufferSizeOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static (IReadOnlyList<InputOptions> inputs, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Option<string[]> inputArg, Option<string> outputArg,
 		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding,
+		Option<string?> lineEndingOption, Option<string?> inputLineEndingOption, Option<string?> outputLineEndingOption,
 		Option<int?> bufferSizeOption, Option<int?> inputBufferSizeOption, Option<int?> outputBufferSizeOption
 	) => (
-		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputBufferSizeOption, bufferSizeOption),
-		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputBufferSizeOption, bufferSizeOption)
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputLineEndingOption, lineEndingOption, inputBufferSizeOption, bufferSizeOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static ITransform<InputOptions, OutputOptions> CreateTransform(

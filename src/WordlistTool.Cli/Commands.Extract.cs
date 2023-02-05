@@ -25,7 +25,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var regex = new Regex(context.BindingContext.ParseResult.GetValueForArgument(regexArgument)!, RegexOptions.Compiled);
 				var transform = new RegexExtractTransform(regex);
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
