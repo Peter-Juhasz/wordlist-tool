@@ -148,6 +148,11 @@ Combine each line with each other line with a separator:
 wl merge cross --inputs list1.txt list2.txt --output output.txt --separator ":"
 ```
 
+Combine each line with each other line of itself with a separator:
+```ps
+wl merge cross --inputs single.txt --output output.txt --separator ":"
+```
+
 Remove entries which can be found in other lists:
 ```ps
 wl merge except --inputs list.txt except-these.txt and-these-*.txt --output output.txt

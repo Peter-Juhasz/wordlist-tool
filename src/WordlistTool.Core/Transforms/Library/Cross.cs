@@ -16,13 +16,13 @@ public sealed class CrossTransform : ITransform<IReadOnlyList<InputOptions>, Out
 
 	public async Task ExecuteAsync(IReadOnlyList<InputOptions> inputs, OutputOptions output, CancellationToken cancellationToken)
 	{
-		if (inputs is { Count: > 2 })
+		if (inputs is { Count: not 1 or 2 })
 		{
 			throw new NotSupportedException();
 		}
 
 		var first = WordlistReader.ReadStreamingAsync(inputs[0], cancellationToken);
-		var second = await WordlistReader.ReadToMemoryAsync(inputs[1], cancellationToken);
+		var second = await WordlistReader.ReadToMemoryAsync(inputs.Count < 2 ? inputs[0] : inputs[1], cancellationToken);
 
 		var writer = WordlistWriter.GetWriterAsync(output);
 
