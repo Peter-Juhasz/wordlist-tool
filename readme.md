@@ -8,11 +8,11 @@ Usage:
   wl [command] [options]
 
 Options:
-  --encoding <encoding>                      Default encoding of the wordlist file. [default: ASCII]
-  --line-ending <line-ending>                Default line ending sequence. [default: 0A]
-  --buffer-size <buffer-size>                Default buffer size for reading and writing. [default: 16384]
-  --version                                  Show version information
-  -?, -h, --help                             Show help and usage information
+  --encoding <encoding>        Default encoding of the wordlist file. [default: ASCII]
+  --line-ending <line-ending>  Default line ending sequence. [default: 0A]
+  --buffer-size <buffer-size>  Default buffer size for reading and writing. [default: 16384]
+  --version                    Show version information
+  -?, -h, --help               Show help and usage information
 
 Commands:
   sort            Sort entries.
@@ -190,6 +190,10 @@ Skip last N entries:
 ```ps
 wl list skip-last list.txt output.txt --count 500
 ```
+
+
+### Split (WIP)
+
 
 
 ### Extract

@@ -98,9 +98,11 @@ public static class WordlistWriter
 		return GetWriter(output.GetPipeWriter(), output.BufferSize, output.Encoding, output.LineEndingBytes);
 	}
 
+#pragma warning disable CS1998 // TODO: should be async eventually
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
 	public static async Task<PipeLineWriter> GetWriterAsync(string filePath, int bufferSize, Encoding encoding, byte[] lineEnding, CancellationToken cancellationToken)
 	{
-		var stream = File.Create(filePath); // TODO: should be async?
+		var stream = File.Create(filePath);
 		return GetWriter(stream, bufferSize, encoding, lineEnding);
 	}
 }
