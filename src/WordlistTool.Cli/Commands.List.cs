@@ -7,7 +7,7 @@ public static partial class Commands
 {
 	private static void AddList(RootCommand root)
 	{
-		var main = new Command("transform-list", "Transform list.");
+		var main = new Command("list", "Transform list.");
 		root.Add(main);
 
 		{
