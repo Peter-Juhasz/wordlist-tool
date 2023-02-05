@@ -43,6 +43,25 @@ public static partial class Commands
 		}
 
 		{
+			var separatorArg = new Option<string?>("separator", "Separator to join entries.");
+
+			var command = new Command("zip", "Combine multiple wordlists line by line.");
+			command.AddAlias("combine");
+			command.AddOption(multipleInputArgument);
+			command.AddOption(outputArgument);
+			command.AddOption(separatorArg);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var transform = new ZipTransform(separator);
+				await transform.ExecuteAsync(inputs, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
+
+		{
 			var command = new Command("except", "Filter out entries in other wordlists from first wordlist.");
 			command.AddOption(multipleInputArgument);
 			command.AddOption(outputArgument);

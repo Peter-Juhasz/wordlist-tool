@@ -9,7 +9,7 @@ Usage:
 
 Options:
   --encoding <encoding>        Encoding of the wordlist file. [default: ASCII]
-  --line-ending <line-ending>  Line ending sequence. [default: LF]
+  --line-ending <line-ending>  Line ending sequence. [default: 0A]
   --version                    Show version information
   -?, -h, --help               Show help and usage information
 
@@ -20,6 +20,7 @@ Commands:
   list            Transform list.
   extract         Extract entries from other formats.
   merge           Merge entries from multiple lists.
+  generate        Generate entries.
 ```
 
 For example:
@@ -127,10 +128,21 @@ Union of multiple lists:
 wl merge union --inputs list1.txt list-*.txt --output output.txt
 ```
 
-Remove entries which are part other lists:
+Combine/zip together multiple lists line by line with no separator:
+```ps
+wl merge zip --inputs list1.txt list2.txt --output output.txt
+```
+
+Combine/zip together multiple lists line by line with a custom separator:
+```ps
+wl merge zip --inputs list1.txt list2.txt --output output.txt --separator ":"
+```
+
+Remove entries which can be found in other lists:
 ```ps
 wl merge except --inputs list.txt except-these.txt and-these-*.txt --output output.txt
 ```
+
 
 ### List operations
 Take first N entries:
@@ -166,8 +178,11 @@ wl extract regex --inputs books/*.txt --output output.txt --regex [a-z]+
 ```
 
 
-### Generate
-Under development
+### Generate (WIP)
+Generate entries:
+```ps
+wl generate new output.txt --charset 0123456789 --min-length 1 --max-length 5
+```
 
 
 ## Configuration
@@ -196,7 +211,6 @@ wl merge union --inputs first.txt file-*.txt last.txt --output out.txt
 
 *Note: patterns are evaluated individually, and if multiple patterns match the same file, it is going to be included multiple times.*
 
-
 ### Standard Input/Output bindings and chaining
 You can use the reserved word `IN` and `OUT` to bind either input or output to standard input/output:
 ```ps
@@ -204,14 +218,27 @@ wl transform lower file.txt OUT
 ```
 
 This makes it possible to chain commands together:
-```
+```ps
 wl transform lower file.txt OUT |
 wl filter distinct IN OUT |
 wl sort asc IN final.txt
 ```
 
-### Line endings
-TODO
+### Encoding (WIP)
+Encoding can be specified, default is `ASCII`:
+```ps
+wl transform lower in.txt out.txt --input-encoding UTF-8 --output-encoding ASCII
+```
 
-### Buffering
-TODO
+### Line endings (WIP)
+Line endings can be specified in HEX notation, default is `0A`:
+```ps
+wl transform lower in.txt out.txt --input-line-ending 0D0A --output-line-ending 0A
+```
+
+### Buffering (WIP)
+Read and write buffering can be specified the following way:
+```ps
+wl transform lower in.txt out.txt --input-buffer-size 4096 --output-buffer-size 16384
+```
+
