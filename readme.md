@@ -133,9 +133,19 @@ Combine/zip together multiple lists line by line with no separator:
 wl merge zip --inputs list1.txt list2.txt --output output.txt
 ```
 
-Combine/zip together multiple lists line by line with a custom separator:
+Combine/zip together multiple lists line by line with a separator:
 ```ps
 wl merge zip --inputs list1.txt list2.txt --output output.txt --separator ":"
+```
+
+Combine each line with each other line with no separator:
+```ps
+wl merge cross --inputs list1.txt list2.txt --output output.txt
+```
+
+Combine each line with each other line with a separator:
+```ps
+wl merge cross --inputs list1.txt list2.txt --output output.txt --separator ":"
 ```
 
 Remove entries which can be found in other lists:

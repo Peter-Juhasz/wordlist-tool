@@ -62,6 +62,26 @@ public static partial class Commands
 		}
 
 		{
+			var separatorArg = new Option<string?>("separator", "Separator to join entries.");
+
+			var command = new Command("cross", "Cartesian product of two lists.");
+			command.AddAlias("cross-join");
+			command.AddAlias("descartes");
+			command.AddOption(multipleInputArgument);
+			command.AddOption(outputArgument);
+			command.AddOption(separatorArg);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var transform = new CrossTransform(separator);
+				await transform.ExecuteAsync(inputs, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
+
+		{
 			var command = new Command("except", "Filter out entries in other wordlists from first wordlist.");
 			command.AddOption(multipleInputArgument);
 			command.AddOption(outputArgument);
