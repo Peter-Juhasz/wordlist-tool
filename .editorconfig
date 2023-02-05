@@ -1,0 +1,35 @@
+﻿root = true
+
+[*.{csproj,vbproj}]
+end_of_line = crlf
+tab_width = 4
+indent_style = tab
+
+[*.json]
+end_of_line = crlf
+tab_width = 4
+indent_style = tab
+
+[*.yaml]
+end_of_line = crlf
+tab_width = 2
+indent_size = 2
+indent_style = space
+
+[*.{cs,vb,fs}]
+indent_style = tab
+tab_width = 4
+end_of_line = crlf
+csharp_style_namespace_declarations = file_scoped:warning
+
+# CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1032.severity = none
+
+# IDE0017: Simplify object initialization
+dotnet_style_object_initializer = false:suggestion
+
+# IDE0028: Simplify collection initialization
+dotnet_style_collection_initializer = false:suggestion
+
+# CA1034: Nested types should not be visible
+dotnet_diagnostic.CA1034.severity = none
