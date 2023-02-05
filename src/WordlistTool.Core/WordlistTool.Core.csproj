@@ -4,6 +4,10 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<Authors>Péter Juhász</Authors>
+		<PackageProjectUrl>https://github.com/Peter-Juhasz/wordlist-tool</PackageProjectUrl>
+		<Description>A chainable, high performance tool for manipulating wordlists.</Description>
+		<Copyright>Péter Juhász</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>

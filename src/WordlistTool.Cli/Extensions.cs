@@ -18,8 +18,8 @@ public static partial class Extensions
 		var input = ResolveInputStream(inputPath);
 
 		return new(
-			inputPath, 
-			input, 
+			inputPath,
+			input,
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
 			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
@@ -80,7 +80,7 @@ public static partial class Extensions
 
 		return new(
 			outputPath,
-			output, 
+			output,
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
 			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384
@@ -99,8 +99,8 @@ public static partial class Extensions
 		var output = ResolveOutputStream(outputPath);
 
 		return new(
-			outputPath, 
-			output, 
+			outputPath,
+			output,
 			context.GetEncoding(encodingOption, fallbackEncodingOption),
 			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption),
 			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384

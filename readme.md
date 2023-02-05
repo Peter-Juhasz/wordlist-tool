@@ -8,10 +8,11 @@ Usage:
   wl [command] [options]
 
 Options:
-  --encoding <encoding>        Encoding of the wordlist file. [default: ASCII]
-  --line-ending <line-ending>  Line ending sequence. [default: 0A]
-  --version                    Show version information
-  -?, -h, --help               Show help and usage information
+  --encoding <encoding>                      Default encoding of the wordlist file. [default: ASCII]
+  --line-ending <line-ending>                Default line ending sequence. [default: 0A]
+  --buffer-size <buffer-size>                Default buffer size for reading and writing. [default: 16384]
+  --version                                  Show version information
+  -?, -h, --help                             Show help and usage information
 
 Commands:
   sort            Sort entries.
@@ -172,22 +173,22 @@ wl merge except --inputs list.txt except-these.txt and-these-*.txt --output outp
 ### List operations
 Take first N entries:
 ```ps
-wl transform-list take list.txt output.txt --count 500
+wl list take list.txt output.txt --count 500
 ```
 
 Take last N entries:
 ```ps
-wl transform-list take-last list.txt output.txt --count 500
+wl list take-last list.txt output.txt --count 500
 ```
 
 Skip first N entries:
 ```ps
-wl transform-list skip list.txt output.txt --count 500
+wl list skip list.txt output.txt --count 500
 ```
 
 Skip last N entries:
 ```ps
-wl transform-list skip-last list.txt output.txt --count 500
+wl list skip-last list.txt output.txt --count 500
 ```
 
 

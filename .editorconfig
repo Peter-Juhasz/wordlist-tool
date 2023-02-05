@@ -1,6 +1,6 @@
 ﻿root = true
 
-[*.{csproj,vbproj}]
+[*.{csproj,vbproj,props}]
 end_of_line = crlf
 tab_width = 4
 indent_style = tab
