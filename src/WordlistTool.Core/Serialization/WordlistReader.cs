@@ -14,36 +14,36 @@ public static class WordlistReader
 		}
 	}
 
-	public static async IAsyncEnumerable<string> ReadStreamingAsync(Stream stream, Encoding encoding, [EnumeratorCancellation] CancellationToken cancellationToken)
+	public static async IAsyncEnumerable<string> ReadStreamingAsync(Stream stream, Encoding encoding, byte[] lineEnding, int bufferSize, [EnumeratorCancellation] CancellationToken cancellationToken)
 	{
-		using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: false); // TODO: new line not supported
+		using var reader = new StreamReader(stream, encoding, detectEncodingFromByteOrderMarks: false, bufferSize); // TODO: new line not supported
 		await foreach (var line in ReadStreamingAsync(reader, cancellationToken)) // TODO: rewrite to pipelines, because textreader is slow
 		{
 			yield return line;
 		}
 	}
 
-	public static async IAsyncEnumerable<string> ReadStreamingAsync(string filePath, Encoding encoding, [EnumeratorCancellation] CancellationToken cancellationToken)
+	public static async IAsyncEnumerable<string> ReadStreamingAsync(string filePath, Encoding encoding, byte[] lineEnding, int bufferSize, [EnumeratorCancellation] CancellationToken cancellationToken)
 	{
 		await using var stream = File.OpenRead(filePath);
-		await foreach (var line in ReadStreamingAsync(stream, encoding, cancellationToken))
+		await foreach (var line in ReadStreamingAsync(stream, encoding, lineEnding, bufferSize, cancellationToken))
 		{
 			yield return line;
 		}
 	}
 
 	public static IAsyncEnumerable<string> ReadStreamingAsync(InputOptions input, CancellationToken cancellationToken) =>
-		ReadStreamingAsync(input.Stream, input.Encoding, cancellationToken);
+		ReadStreamingAsync(input.Stream, input.Encoding, input.LineEndingBytes, input.BufferSize, cancellationToken);
 
 
-	public static async Task<IList<string>> ReadToMemoryAsync(string filePath, Encoding encoding, CancellationToken cancellationToken)
+	public static async Task<IList<string>> ReadToMemoryAsync(string filePath, Encoding encoding, byte[] lineEnding, int bufferSize, CancellationToken cancellationToken)
 	{
-		return await ReadStreamingAsync(filePath, encoding, cancellationToken).ToListAsync(cancellationToken);
+		return await ReadStreamingAsync(filePath, encoding, lineEnding, bufferSize, cancellationToken).ToListAsync(cancellationToken);
 	}
 
-	public static async Task<IList<string>> ReadToMemoryAsync(Stream stream, Encoding encoding, CancellationToken cancellationToken)
+	public static async Task<IList<string>> ReadToMemoryAsync(Stream stream, Encoding encoding, byte[] lineEnding, int bufferSize, CancellationToken cancellationToken)
 	{
-		return await ReadStreamingAsync(stream, encoding, cancellationToken).ToListAsync(cancellationToken);
+		return await ReadStreamingAsync(stream, encoding, lineEnding, bufferSize, cancellationToken).ToListAsync(cancellationToken);
 	}
 
 	public static async Task<IList<string>> ReadToMemoryAsync(TextReader stream, CancellationToken cancellationToken)
@@ -53,6 +53,6 @@ public static class WordlistReader
 
 	public static async Task<IList<string>> ReadToMemoryAsync(InputOptions input, CancellationToken cancellationToken)
 	{
-		return await ReadStreamingAsync(input.Stream, input.Encoding, cancellationToken).ToListAsync(cancellationToken);
+		return await ReadStreamingAsync(input.Stream, input.Encoding, input.LineEndingBytes, input.BufferSize, cancellationToken).ToListAsync(cancellationToken);
 	}
 }
