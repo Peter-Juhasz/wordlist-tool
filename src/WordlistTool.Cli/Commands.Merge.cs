@@ -21,7 +21,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new ConcatTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -35,7 +35,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new UnionTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -54,7 +54,7 @@ public static partial class Commands
 			{
 				var cancellationToken = context.GetCancellationToken();
 				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new ZipTransform(separator);
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -74,7 +74,7 @@ public static partial class Commands
 			{
 				var cancellationToken = context.GetCancellationToken();
 				var separator = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new CrossTransform(separator);
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});
@@ -88,7 +88,7 @@ public static partial class Commands
 			command.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption);
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new ExceptTransform();
 				await transform.ExecuteAsync(inputs, output, cancellationToken);
 			});

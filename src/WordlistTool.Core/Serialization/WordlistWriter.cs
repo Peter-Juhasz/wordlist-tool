@@ -1,4 +1,5 @@
-﻿using WordlistTool.Core.Transforms;
+﻿using System.Text;
+using WordlistTool.Core.Transforms;
 
 namespace WordlistTool.Core.Serialization;
 
@@ -14,21 +15,21 @@ public static class WordlistWriter
 		}
 	}
 
-	public static async Task WriteAsync(Stream stream, IEnumerable<string> list, CancellationToken cancellationToken)
+	public static async Task WriteAsync(Stream stream, Encoding encoding, IEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		using var writer = new StreamWriter(stream);
+		using var writer = new StreamWriter(stream, encoding);
 		await WriteAsync(writer, list, cancellationToken);
 	}
 
-	public static async Task WriteAsync(string filePath, IEnumerable<string> list, CancellationToken cancellationToken)
+	public static async Task WriteAsync(string filePath, Encoding encoding, IEnumerable<string> list, CancellationToken cancellationToken)
 	{
 		await using var stream = File.Create(filePath);
-		await WriteAsync(stream, list, cancellationToken);
+		await WriteAsync(stream, encoding, list, cancellationToken);
 	}
 
 	public static async Task WriteAsync(OutputOptions output, IEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		await WriteAsync(output.Stream, list, cancellationToken);
+		await WriteAsync(output.Stream, output.Encoding, list, cancellationToken);
 	}
 
 
@@ -42,40 +43,40 @@ public static class WordlistWriter
 		}
 	}
 
-	public static async Task WriteAsync(Stream stream, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
+	public static async Task WriteAsync(Stream stream, Encoding encoding, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		using var writer = new StreamWriter(stream);
+		using var writer = new StreamWriter(stream, encoding);
 		await WriteAsync(writer, list, cancellationToken);
 	}
 
-	public static async Task WriteAsync(string filePath, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
+	public static async Task WriteAsync(string filePath, Encoding encoding, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
 	{
 		await using var stream = File.Create(filePath);
-		await WriteAsync(stream, list, cancellationToken);
+		await WriteAsync(stream, encoding, list, cancellationToken);
 	}
 
 	public static async Task WriteAsync(OutputOptions output, IAsyncEnumerable<string> list, CancellationToken cancellationToken)
 	{
-		await WriteAsync(output.Stream, list, cancellationToken);
+		await WriteAsync(output.Stream, output.Encoding, list, cancellationToken);
 	}
 
 
 	public static StringLineWriter GetWriterAsync(TextWriter writer) => new(writer);
 
-	public static StringLineWriter GetWriterAsync(Stream stream)
+	public static StringLineWriter GetWriterAsync(Stream stream, Encoding encoding)
 	{
-		var streamWriter = new StreamWriter(stream);
+		var streamWriter = new StreamWriter(stream, encoding);
 		return new(streamWriter);
 	}
 
 	public static StringLineWriter GetWriterAsync(OutputOptions output)
 	{
-		return GetWriterAsync(output.Stream);
+		return GetWriterAsync(output.Stream, output.Encoding);
 	}
 
-	public static async Task<StringLineWriter> GetWriterAsync(string filePath, CancellationToken cancellationToken)
+	public static async Task<StringLineWriter> GetWriterAsync(string filePath, Encoding encoding, CancellationToken cancellationToken)
 	{
 		var stream = File.Create(filePath);
-		return GetWriterAsync(stream);
+		return GetWriterAsync(stream, encoding);
 	}
 }

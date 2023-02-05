@@ -9,13 +9,13 @@ public static partial class Extensions
 	public static InputOptions GetInputOptions(
 		this InvocationContext context,
 		Argument<string> inputArg,
-		Option<string?> encodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
 	)
 	{
 		var inputPath = context.BindingContext.ParseResult.GetValueForArgument(inputArg);
 		var input = ResolveInputStream(inputPath);
 
-		return new(inputPath, input, context.GetEncoding(encodingOption));
+		return new(inputPath, input, context.GetEncoding(encodingOption, fallbackEncodingOption));
 	}
 
 	private static Stream ResolveInputStream(string inputPath) => inputPath switch
@@ -27,7 +27,7 @@ public static partial class Extensions
 	public static IReadOnlyList<InputOptions> GetInputOptions(
 		this InvocationContext context,
 		Option<string[]> inputArg,
-		Option<string?> encodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
 	)
 	{
 		var arguments = context.BindingContext.ParseResult.GetValueForOption(inputArg)!;
@@ -47,32 +47,32 @@ public static partial class Extensions
 		}
 
 		return paths
-			.Select(i => new InputOptions(i, ResolveInputStream(i), context.GetEncoding(encodingOption)))
+			.Select(i => new InputOptions(i, ResolveInputStream(i), context.GetEncoding(encodingOption, fallbackEncodingOption)))
 			.ToList();
 	}
 
 	public static OutputOptions GetOutputOptions(
 		this InvocationContext context,
 		Argument<string> outputArg,
-		Option<string?> encodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
 	)
 	{
 		var outputPath = context.BindingContext.ParseResult.GetValueForArgument(outputArg);
 		var output = ResolveOutputStream(outputPath);
 
-		return new(outputPath, output, context.GetEncoding(encodingOption));
+		return new(outputPath, output, context.GetEncoding(encodingOption, fallbackEncodingOption));
 	}
 
 	public static OutputOptions GetOutputOptions(
 		this InvocationContext context,
 		Option<string> outputArg,
-		Option<string?> encodingOption
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
 	)
 	{
 		var outputPath = context.BindingContext.ParseResult.GetValueForOption(outputArg);
 		var output = ResolveOutputStream(outputPath);
 
-		return new(outputPath, output, context.GetEncoding(encodingOption));
+		return new(outputPath, output, context.GetEncoding(encodingOption, fallbackEncodingOption));
 	}
 
 	private static Stream ResolveOutputStream(string outputPath)
@@ -86,8 +86,12 @@ public static partial class Extensions
 
 	public static Encoding GetEncoding(
 		this InvocationContext context,
-		Option<string?> encodingOption
-	) => context.BindingContext.ParseResult.GetValueForOption(encodingOption) switch
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption
+	) => (
+		context.BindingContext.ParseResult.GetValueForOption(encodingOption) ??
+		context.BindingContext.ParseResult.GetValueForOption(fallbackEncodingOption)
+	)
+	switch
 	{
 		string e => Encoding.GetEncoding(e),
 		_ => Encoding.ASCII
@@ -95,18 +99,17 @@ public static partial class Extensions
 
 	public static (InputOptions input, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Argument<string> inputArg, Argument<string> outputArg,
-		Option<string?> encodingOption
-	) => (
-		context.GetInputOptions(inputArg, encodingOption),
-		context.GetOutputOptions(outputArg, encodingOption)
+		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding) => (
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption)
 	);
 
 	public static (IReadOnlyList<InputOptions> inputs, OutputOptions output) GetTransformOptions(this InvocationContext context,
 		Option<string[]> inputArg, Option<string> outputArg,
-		Option<string?> encodingOption
+		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding
 	) => (
-		context.GetInputOptions(inputArg, encodingOption),
-		context.GetOutputOptions(outputArg, encodingOption)
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption)
 	);
 
 	public static ITransform<InputOptions, OutputOptions> CreateTransform(

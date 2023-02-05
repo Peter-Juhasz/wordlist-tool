@@ -17,7 +17,7 @@ public static partial class Commands
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new SortTransform(false);
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -31,7 +31,7 @@ public static partial class Commands
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new SortTransform(true);
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
@@ -45,7 +45,7 @@ public static partial class Commands
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption);
+				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption);
 				var transform = new SortReverseTransform();
 				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
 			});
