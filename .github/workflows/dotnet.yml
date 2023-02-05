@@ -48,6 +48,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --collect "Code coverage"
       
+    # Publish
     - name: Publish
       working-directory: src/WordlistTool.Cli
       run: dotnet publish --configuration Release --version-suffix "preview.${{ github.run_number }}"
@@ -57,3 +58,15 @@ jobs:
       with:
         name: dotnet
         path: src/*.Cli/bin/Release/*/publish/
+
+    
+    - name: Publish
+      working-directory: src/WordlistTool.Cli
+      run: dotnet publish --configuration Release --runtime win-x64 --version-suffix "preview.${{ github.run_number }}" --self-contained -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true
+      
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x64
+        path: src/*.Cli/bin/Release/*/win-x64/publish/*.exe
+        
