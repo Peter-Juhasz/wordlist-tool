@@ -18,16 +18,20 @@ public sealed class PipeLineWriter : IAsyncDisposable
 	public byte[] LineEnding { get; }
 	public int BufferSize { get; }
 
+	private const int MaxStackSize = 256;
+
 	public ValueTask WriteAsync(string line, CancellationToken cancellationToken)
 	{
-		Span<byte> bytes = stackalloc byte[Encoding.GetMaxByteCount(line.Length)];
+		int requiredLength = Encoding.GetMaxByteCount(line.Length);
+		Span<byte> bytes = requiredLength > MaxStackSize ? new byte[requiredLength] : stackalloc byte[requiredLength];
 		int written = Encoding.GetBytes(line, bytes);
 		return WriteCoreAsync(bytes[..written], cancellationToken);
 	}
 
 	public ValueTask WriteAsync(ReadOnlySpan<char> line, CancellationToken cancellationToken)
 	{
-		Span<byte> bytes = stackalloc byte[Encoding.GetMaxByteCount(line.Length)];
+		int requiredLength = Encoding.GetMaxByteCount(line.Length);
+		Span<byte> bytes = requiredLength > MaxStackSize ? new byte[requiredLength] : stackalloc byte[requiredLength];
 		int written = Encoding.GetBytes(line, bytes);
 		return WriteCoreAsync(bytes[..written], cancellationToken);
 	}

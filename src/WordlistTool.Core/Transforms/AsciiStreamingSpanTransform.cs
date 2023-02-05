@@ -1,10 +1,13 @@
 ﻿using System.Buffers;
 using System.IO.Pipelines;
+using System.Text;
 
 namespace WordlistTool.Core.Transforms;
 
 public abstract class AsciiStreamingSpanTransform : ITransform<InputOptions, OutputOptions>
 {
+	private const int MaxStackSize = 256;
+
 	protected virtual int EstimateOutputBufferSize(int inputLength) => inputLength;
 
 	protected abstract void Transform(ReadOnlySpan<byte> input, Span<byte> output, out int written);
@@ -87,7 +90,8 @@ public abstract class AsciiStreamingSpanTransform : ITransform<InputOptions, Out
 		}
 		else
 		{
-			Span<byte> buffer = stackalloc byte[EstimateOutputBufferSize(length)];
+			int requiredLength = EstimateOutputBufferSize(length);
+			Span<byte> buffer = requiredLength > MaxStackSize ? new byte[requiredLength] : stackalloc byte[requiredLength];
 			bytes.CopyTo(buffer);
 			var output = writer.GetSpan(sizeHint: length + lineEnding.Length);
 			Transform(buffer, output, out written);

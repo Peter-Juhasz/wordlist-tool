@@ -6,6 +6,8 @@ namespace WordlistTool.Core.Transforms;
 
 public abstract class StreamingSpanTransform : ITransform<InputOptions, OutputOptions>
 {
+	private const int MaxStackSize = 256;
+
 	protected virtual int EstimateOutputBufferSize(int inputLength) => inputLength;
 
 	protected abstract void Transform(ReadOnlySpan<char> input, Span<char> output, out int written);
@@ -70,10 +72,12 @@ public abstract class StreamingSpanTransform : ITransform<InputOptions, OutputOp
 		var lineEnding = outputOptions.LineEndingBytes;
 		var encoding = outputOptions.Encoding;
 
-		Span<char> inputBuffer = stackalloc char[(int)bytes.Length];
+		int inputLength = (int)bytes.Length;
+		Span<char> inputBuffer = inputLength > MaxStackSize ? new char[inputLength] : stackalloc char[inputLength];
 		int written = encoding.GetChars(bytes, inputBuffer);
 
-		Span<char> outputBuffer = stackalloc char[EstimateOutputBufferSize(inputBuffer.Length)];
+		int estimatedOutputLength = EstimateOutputBufferSize(inputLength);
+		Span<char> outputBuffer = estimatedOutputLength > MaxStackSize ? new char[estimatedOutputLength] : stackalloc char[estimatedOutputLength];
 		Transform(inputBuffer[..written], outputBuffer, out written);
 
 		if (written > 0)
