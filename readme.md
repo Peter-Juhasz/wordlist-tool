@@ -197,8 +197,11 @@ wl list skip-last list.txt output.txt --count 500
 ```
 
 
-### Split (WIP)
-
+### Split
+Split a single list into multiple lists by number of entries:
+```ps
+wl split entries list.txt output-{0}.txt --count 500
+```
 
 
 ### Extract

@@ -107,6 +107,29 @@ public static partial class Extensions
 		);
 	}
 
+	public static TemplatedOutputOptions GetTemplatedOutputOptions(
+		this InvocationContext context,
+		Argument<string> outputArg,
+		Option<string?> encodingOption, Option<string?> fallbackEncodingOption,
+		Option<string?> lineEndingOption, Option<string?> fallbackLineEndingOption,
+		Option<int?> bufferSizeOption, Option<int?> fallbackBufferSizeOption
+	)
+	{
+		var outputPath = context.BindingContext.ParseResult.GetValueForArgument(outputArg);
+		if (!outputPath.Contains("{0}"))
+		{
+			throw new ArgumentException("Output path should be a template.");
+		}
+
+		return new(
+			Environment.CurrentDirectory,
+			outputPath,
+			context.BindingContext.ParseResult.GetValueForOption(bufferSizeOption) ?? context.BindingContext.ParseResult.GetValueForOption(fallbackBufferSizeOption) ?? 16384,
+			context.GetEncoding(encodingOption, fallbackEncodingOption),
+			context.GetLineEnding(lineEndingOption, fallbackLineEndingOption)
+		);
+	}
+
 	private static Stream ResolveOutputStream(string outputPath)
 	{
 		return outputPath switch
@@ -156,6 +179,16 @@ public static partial class Extensions
 	) => (
 		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputLineEndingOption, lineEndingOption, inputBufferSizeOption, bufferSizeOption),
 		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
+	);
+
+	public static (InputOptions input, TemplatedOutputOptions output) GetSplitTransformOptions(this InvocationContext context,
+		Argument<string> inputArg, Argument<string> outputArg,
+		Option<string?> encodingOption, Option<string?> inputEncoding, Option<string?> outputEncoding,
+		Option<string?> lineEndingOption, Option<string?> inputLineEndingOption, Option<string?> outputLineEndingOption,
+		Option<int?> bufferSizeOption, Option<int?> inputBufferSizeOption, Option<int?> outputBufferSizeOption
+	) => (
+		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputLineEndingOption, lineEndingOption, inputBufferSizeOption, bufferSizeOption),
+		context.GetTemplatedOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static ITransform<InputOptions, OutputOptions> CreateTransform(

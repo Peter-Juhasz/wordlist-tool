@@ -27,6 +27,7 @@ public static partial class Commands
 		AddList(root);
 		AddExtract(root);
 		AddMerge(root);
+		AddSplit(root);
 
 		encodingOption.SetDefaultValue("ASCII");
 		root.AddGlobalOption(encodingOption);
