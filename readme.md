@@ -219,6 +219,11 @@ Split a single list into multiple lists by number of bytes:
 wl split bytes list.txt output-{0}.txt --bytes 1048576
 ```
 
+Split a single list into multiple lists by length:
+```ps
+wl split length list.txt output-{0}.txt
+```
+
 
 ### Extract
 Extract words from files using a regular expression (`\w+` by default):

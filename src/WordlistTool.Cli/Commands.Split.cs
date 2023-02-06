@@ -43,5 +43,19 @@ public static partial class Commands
 			});
 			main.AddCommand(command);
 		}
+
+		{
+			var command = new Command("length", "Split by length.");
+			command.AddArgument(inputPathArgument);
+			command.AddArgument(outputPathArgument);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var (input, output) = context.GetSplitTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var transform = new SplitLengthTransform();
+				await transform.ExecuteAsync(input, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
 	}
 }
