@@ -26,5 +26,22 @@ public static partial class Commands
 			});
 			main.AddCommand(command);
 		}
+
+		{
+			var separatorArg = new Option<long>("--bytes", "Count of entries in a chunk.");
+
+			var command = new Command("bytes", "Split by number of bytes.");
+			command.AddArgument(inputPathArgument);
+			command.AddArgument(outputPathArgument);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var (input, output) = context.GetSplitTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var count = context.BindingContext.ParseResult.GetValueForOption(separatorArg);
+				var transform = new SplitBytesTransform(count);
+				await transform.ExecuteAsync(input, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
 	}
 }
