@@ -209,17 +209,17 @@ wl list skip-last list.txt output.txt --count 500
 
 
 ### Split
-Split a single list into multiple lists by number of entries:
+Split a single list into multiple chunks by number of entries:
 ```ps
 wl split entries list.txt output-{0}.txt --count 500
 ```
 
-Split a single list into multiple lists by number of bytes:
+Split into chunks by number of bytes (but do not break any entries):
 ```ps
 wl split bytes list.txt output-{0}.txt --bytes 1048576
 ```
 
-Split a single list into multiple lists by length:
+Split by length:
 ```ps
 wl split length list.txt output-{0}.txt
 ```

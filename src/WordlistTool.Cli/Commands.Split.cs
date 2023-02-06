@@ -15,6 +15,7 @@ public static partial class Commands
 			var separatorArg = new Option<int>("--count", "Count of entries in a chunk.");
 
 			var command = new Command("entries", "Split by number of entries.");
+			command.AddAlias("count");
 			command.AddArgument(inputPathArgument);
 			command.AddArgument(outputPathArgument);
 			command.SetHandler(async (context) =>

@@ -16,7 +16,6 @@ public sealed class SplitTransform : ITransform<InputOptions, TemplatedOutputOpt
 	{
 		int count = 0;
 		int fileCount = 0;
-		OutputOptions? current = null;
 		PipeLineWriter? writer = null;
 		await foreach (var line in WordlistReader.ReadStreamingAsync(input, cancellationToken))
 		{
@@ -29,7 +28,7 @@ public sealed class SplitTransform : ITransform<InputOptions, TemplatedOutputOpt
 				}
 
 				fileCount++;
-				current = output.Create(fileCount.ToString(CultureInfo.InvariantCulture));
+				var current = output.Create(fileCount.ToString(CultureInfo.InvariantCulture));
 				writer = WordlistWriter.GetWriter(current);
 			}
 
