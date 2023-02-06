@@ -94,5 +94,19 @@ public static partial class Commands
 			});
 			main.AddCommand(command);
 		}
+
+		{
+			var command = new Command("binary-concat", "Concatenate files as raw bytes.");
+			command.AddOption(multipleInputArgument);
+			command.AddOption(outputArgument);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var (inputs, output) = context.GetTransformOptions(multipleInputArgument, outputArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var transform = new BinaryConcatTransform();
+				await transform.ExecuteAsync(inputs, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
 	}
 }

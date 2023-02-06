@@ -37,3 +37,15 @@ public sealed class UnionTransform : ITransform<IReadOnlyList<InputOptions>, Out
 		await WordlistWriter.WriteAsync(output, concatenated, cancellationToken);
 	}
 }
+
+public sealed class BinaryConcatTransform : ITransform<IReadOnlyList<InputOptions>, OutputOptions>
+{
+	public async Task ExecuteAsync(IReadOnlyList<InputOptions> inputs, OutputOptions output, CancellationToken cancellationToken)
+	{
+		foreach (var input in inputs)
+		{
+			await input.Stream.CopyToAsync(output.Stream, cancellationToken);
+			await output.Stream.WriteAsync(output.LineEndingBytes, cancellationToken); // TODO: better handling of line breaks
+		}
+	}
+}

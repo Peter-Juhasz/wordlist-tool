@@ -134,6 +134,11 @@ Concatenate multiple lists together:
 wl merge concat --inputs list1.txt list-*.txt --output output.txt
 ```
 
+Concatenate multiple lists together as raw bytes without reprocessing, separated by `--output-line-ending`. This is the fastest way to concatenate lists:
+```ps
+wl merge binary-concat --inputs list1.txt list-*.txt --output output.txt
+```
+
 Union of multiple lists:
 ```ps
 wl merge union --inputs list1.txt list-*.txt --output output.txt
