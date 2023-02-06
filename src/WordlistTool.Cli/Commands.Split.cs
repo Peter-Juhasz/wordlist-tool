@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Text.RegularExpressions;
 using WordlistTool.Core.Transforms.Library;
 
 namespace WordlistTool.Cli;
@@ -52,6 +53,23 @@ public static partial class Commands
 			{
 				var cancellationToken = context.GetCancellationToken();
 				var (input, output) = context.GetSplitTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var transform = new SplitLengthTransform();
+				await transform.ExecuteAsync(input, output, cancellationToken);
+			});
+			main.AddCommand(command);
+		}
+
+		{
+			var regexArgument = new Option<string>("regex", "Regular expression to match.");
+
+			var command = new Command("regex", "Split by regular expression matching.");
+			command.AddArgument(inputPathArgument);
+			command.AddArgument(outputPathArgument);
+			command.SetHandler(async (context) =>
+			{
+				var cancellationToken = context.GetCancellationToken();
+				var (input, output) = context.GetSplitTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var regex = new Regex(context.BindingContext.ParseResult.GetValueForOption(regexArgument), RegexOptions.Compiled);
 				var transform = new SplitLengthTransform();
 				await transform.ExecuteAsync(input, output, cancellationToken);
 			});

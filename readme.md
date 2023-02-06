@@ -224,6 +224,11 @@ Split a single list into multiple lists by length:
 wl split length list.txt output-{0}.txt
 ```
 
+Split by regular expression into `matching` and `non-matching` lists:
+```ps
+wl split regex list.txt output-{0}.txt --regex \d+
+```
+
 
 ### Extract
 Extract words from files using a regular expression (`\w+` by default):
