@@ -10,30 +10,34 @@ public static partial class Commands
 		var main = new Command("sort", "Sort entries.");
 		root.Add(main);
 
+		var descendingOption = new Option<bool?>("--descending", "Sort in descending order.");
+
 		{
-			var sort = new Command("asc", "Sort entries in a wordlist.");
+			var sort = new Command("entries", "Sort entries in a wordlist.");
 			sort.AddArgument(inputPathArgument);
 			sort.AddArgument(outputPathArgument);
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
-				var transform = new SortTransform(false);
-				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
+				var (input, output) = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var descending = context.BindingContext.ParseResult.GetValueForOption(descendingOption) ?? false;
+				var transform = new SortTransform(descending);
+				await transform.ExecuteAsync(input, output, cancellationToken);
 			});
 			main.AddCommand(sort);
 		}
 
 		{
-			var sort = new Command("desc", "Sort entries in a wordlist in a descending order.");
+			var sort = new Command("length", "Sort entries by length.");
 			sort.AddArgument(inputPathArgument);
 			sort.AddArgument(outputPathArgument);
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
-				var transform = new SortTransform(true);
-				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
+				var (input, output) = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var descending = context.BindingContext.ParseResult.GetValueForOption(descendingOption) ?? false;
+				var transform = new SortByLengthTransform(descending);
+				await transform.ExecuteAsync(input, output, cancellationToken);
 			});
 			main.AddCommand(sort);
 		}
@@ -45,12 +49,11 @@ public static partial class Commands
 			sort.SetHandler(async (context) =>
 			{
 				var cancellationToken = context.GetCancellationToken();
-				var options = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
+				var (input, output) = context.GetTransformOptions(inputPathArgument, outputPathArgument, encodingOption, inputEncodingOption, outputEncodingOption, lineEndingOption, inputLineEndingOption, outputLineEndingOption, bufferSizeOption, inputBufferSizeOption, outputBufferSizeOption);
 				var transform = new SortReverseTransform();
-				await transform.ExecuteAsync(options.input, options.output, cancellationToken);
+				await transform.ExecuteAsync(input, output, cancellationToken);
 			});
 			main.AddCommand(sort);
 		}
 	}
-
 }

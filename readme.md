@@ -32,20 +32,31 @@ wl sort asc IN OUT |
 wl transform-list take IN output.txt 1000
 ```
 
+
 ### Sort
 You can sort entries in ascending order the following way:
 ```ps
-wl sort asc list.txt
+wl sort entries list.txt
 ```
 
 Output can be saved to another file:
 ```ps
-wl sort asc list.txt output.txt
+wl sort entries list.txt output.txt
 ```
 
 Sort entries in a descending way:
 ```ps
-wl sort desc list.txt
+wl sort entries list.txt --descending
+```
+
+Sort entries by length:
+```ps
+wl sort length list.txt
+```
+
+Sort entries by length descending:
+```ps
+wl sort length list.txt --descending
 ```
 
 Reverse sort order:

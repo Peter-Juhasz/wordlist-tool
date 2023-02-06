@@ -130,14 +130,11 @@ public static partial class Extensions
 		);
 	}
 
-	private static Stream ResolveOutputStream(string outputPath)
+	private static Stream ResolveOutputStream(string outputPath) => outputPath switch
 	{
-		return outputPath switch
-		{
-			"OUT" => Console.OpenStandardOutput(),
-			_ => File.Create(outputPath)
-		};
-	}
+		"OUT" => Console.OpenStandardOutput(),
+		_ => File.Create(outputPath)
+	};
 
 	public static Encoding GetEncoding(
 		this InvocationContext context,
