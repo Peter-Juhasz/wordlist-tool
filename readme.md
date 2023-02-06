@@ -15,12 +15,13 @@ Options:
   -?, -h, --help               Show help and usage information
 
 Commands:
-  sort            Sort entries.
-  filter          Filter entries.
   transform       Transform entries.
+  filter          Filter entries.
+  sort            Sort entries.
   list            Transform list.
-  extract         Extract entries from other formats.
   merge           Merge entries from multiple lists.
+  split           Split a list into multiple lists.
+  extract         Extract entries from other formats.
   generate        Generate entries.
 ```
 
@@ -242,8 +243,8 @@ wl extract regex --inputs books/*.txt --output output.txt --regex [a-z]+
 ```
 
 
-### Generate (WIP)
-Generate entries:
+### Generate
+Generate entries using a specific charset:
 ```ps
 wl generate new output.txt --charset 0123456789 --min-length 1 --max-length 5
 ```

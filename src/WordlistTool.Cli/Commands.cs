@@ -21,13 +21,14 @@ public static partial class Commands
 
 	public static void AddCommands(this RootCommand root)
 	{
-		AddSort(root);
-		AddFilters(root);
 		AddTransform(root);
+		AddFilters(root);
+		AddSort(root);
 		AddList(root);
-		AddExtract(root);
-		AddMerge(root);
 		AddSplit(root);
+		AddMerge(root);
+		AddExtract(root);
+		AddGenerate(root);
 
 		encodingOption.SetDefaultValue("ASCII");
 		root.AddGlobalOption(encodingOption);

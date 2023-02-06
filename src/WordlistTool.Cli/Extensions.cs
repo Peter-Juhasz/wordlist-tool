@@ -67,6 +67,18 @@ public static partial class Extensions
 			.ToList();
 	}
 
+	public static GenerateOptions GetGenerateInputOptions(
+		this InvocationContext context,
+		Option<int> minimumOption, Option<int> maximumOption, Option<string> charsetOption
+	)
+	{
+		return new(
+			context.BindingContext.ParseResult.GetValueForOption(charsetOption).ToCharArray(),
+			context.BindingContext.ParseResult.GetValueForOption(minimumOption),
+			context.BindingContext.ParseResult.GetValueForOption(maximumOption)
+		);
+	}
+
 	public static OutputOptions GetOutputOptions(
 		this InvocationContext context,
 		Argument<string> outputArg,
@@ -186,6 +198,17 @@ public static partial class Extensions
 	) => (
 		context.GetInputOptions(inputArg, inputEncoding, encodingOption, inputLineEndingOption, lineEndingOption, inputBufferSizeOption, bufferSizeOption),
 		context.GetTemplatedOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
+	);
+
+	public static (GenerateOptions input, OutputOptions output) GetGenerateTransformOptions(this InvocationContext context,
+		Option<int> minimumOption, Option<int> maximumOption, Option<string> charsetOption,
+		Argument<string> outputArg,
+		Option<string?> encodingOption, Option<string?> outputEncoding,
+		Option<string?> lineEndingOption, Option<string?> outputLineEndingOption,
+		Option<int?> bufferSizeOption, Option<int?> outputBufferSizeOption
+	) => (
+		context.GetGenerateInputOptions(minimumOption, maximumOption, charsetOption),
+		context.GetOutputOptions(outputArg, outputEncoding, encodingOption, outputLineEndingOption, lineEndingOption, outputBufferSizeOption, bufferSizeOption)
 	);
 
 	public static ITransform<InputOptions, OutputOptions> CreateTransform(

@@ -8,7 +8,7 @@ public static partial class Commands
 {
 	private static void AddSplit(RootCommand root)
 	{
-		var main = new Command("split", "Split entries into multiple lists.");
+		var main = new Command("split", "Split a list into multiple lists.");
 		root.Add(main);
 
 		{
