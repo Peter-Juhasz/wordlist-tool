@@ -16,7 +16,7 @@ public sealed class CrossTransform : ITransform<IReadOnlyList<InputOptions>, Out
 
 	public async Task ExecuteAsync(IReadOnlyList<InputOptions> inputs, OutputOptions output, CancellationToken cancellationToken)
 	{
-		if (inputs is { Count: not 1 or 2 })
+		if (inputs is { Count: not (1 or 2) })
 		{
 			throw new NotSupportedException();
 		}
